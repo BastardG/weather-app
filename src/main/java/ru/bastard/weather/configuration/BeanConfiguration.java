@@ -1,0 +1,40 @@
+package ru.bastard.weather.configuration;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
+import ru.bastard.weather.gui.SearchCityFrame;
+import ru.bastard.weather.service.http.HttpRequestsService;
+
+import java.util.Properties;
+import java.util.logging.Logger;
+
+@Configuration
+public class BeanConfiguration {
+
+    @Bean
+    public static Logger logger(){
+        return Logger.getLogger("application");
+    }
+
+    @Bean
+    public static RestTemplate restTemplate(){
+        return new RestTemplate();
+    }
+
+    @Bean
+    public static Properties properties(){
+        return new Properties();
+    }
+
+    @Bean("searchFrame")
+    public static SearchCityFrame mainFrame(){
+        return new SearchCityFrame();
+    }
+
+    @Bean
+    public static HttpRequestsService mainService(){
+        return new HttpRequestsService(restTemplate());
+    }
+
+}
