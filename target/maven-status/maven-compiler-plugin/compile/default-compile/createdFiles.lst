@@ -1,0 +1,10 @@
+ru\bastard\weather\service\http\HttpRequestsService.class
+ru\bastard\weather\dto\WeatherDTO.class
+ru\bastard\weather\gui\InfoPanel.class
+ru\bastard\weather\configuration\BeanConfiguration.class
+ru\bastard\weather\Main.class
+ru\bastard\weather\mapping\WeatherMapping.class
+ru\bastard\weather\gui\MainFrame.class
+ru\bastard\weather\dto\enums\WeatherCode.class
+ru\bastard\weather\dto\GeoDTO.class
+ru\bastard\weather\mapping\GeoMapping.class

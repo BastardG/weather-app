@@ -12,8 +12,6 @@ public class Main {
     private static final ApplicationContext CONTEXT = new AnnotationConfigApplicationContext(BeanConfiguration.class);
     public static final MainFrame MAIN_FRAME = (MainFrame) CONTEXT.getBean("mainFrame");
 
-    public static void main(String[] args) {
-
-    }
+    public static void main(String[] args) {}
 
 }
