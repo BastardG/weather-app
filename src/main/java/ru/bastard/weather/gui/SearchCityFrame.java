@@ -1,6 +1,7 @@
 package ru.bastard.weather.gui;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.bastard.weather.service.http.HttpRequestsService;
 
 import javax.swing.*;
@@ -8,6 +9,7 @@ import java.awt.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+@Component
 public class SearchCityFrame extends JFrame {
 
     private JTextField cityNameField;
@@ -15,16 +17,18 @@ public class SearchCityFrame extends JFrame {
     private JPanel searchPanel;
     private InfoPanel infoPanel;
     private JLabel cityNameFieldLabel;
+    private SpringLayout springLayout;
     @Autowired
     private HttpRequestsService httpRequestsService;
 
     public SearchCityFrame() {
-        setTitle("title");
+        setTitle("Weather");
         configureFrame();
         configureLabel();
         configureButton();
         configureTextField();
         configurePanels();
+        configureLayout();
     }
 
     private void configureLabel() {
@@ -36,7 +40,7 @@ public class SearchCityFrame extends JFrame {
 
     private void configureFrame(){
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(300, 125);
+        setSize(250, 250);
         setVisible(true);
         setResizable(false);
     }
@@ -45,18 +49,32 @@ public class SearchCityFrame extends JFrame {
         searchPanel = new JPanel();
         searchPanel.setName("search");
         searchPanel.setVisible(true);
+        searchPanel.add(cityNameFieldLabel);
         searchPanel.add(cityNameField);
         searchPanel.add(submitButton);
-        searchPanel.add(cityNameFieldLabel);
         add(searchPanel);
-        setLayout(new CardLayout());
         searchPanel.updateUI();
+        searchPanel.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
     }
+
+    private void configureLayout() {
+        springLayout = new SpringLayout();
+        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, cityNameFieldLabel, -10, SpringLayout.HORIZONTAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, cityNameFieldLabel, -85, SpringLayout.VERTICAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, cityNameField, -10, SpringLayout.HORIZONTAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, cityNameField, -60, SpringLayout.VERTICAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, submitButton, -10, SpringLayout.HORIZONTAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, submitButton, 50, SpringLayout.VERTICAL_CENTER, this);
+        searchPanel.setLayout(springLayout);
+        searchPanel.revalidate();
+        searchPanel.repaint();
+    }
+
 
     private void configureTextField() {
         cityNameField = new JTextField();
         cityNameField.setVisible(true);
-        cityNameField.setName("dfgdf");
+        cityNameField.setName("searchField");
         cityNameField.setBounds(150, 125, 75, 35);
         cityNameField.setPreferredSize(new Dimension(100, 25));
     }
@@ -76,23 +94,25 @@ public class SearchCityFrame extends JFrame {
     private void submit(String cityName){
         var weatherDto = httpRequestsService.getWeather(cityName);
         infoPanel = new InfoPanel(weatherDto, cityName);
-        infoPanel.setName("info");
-        add(infoPanel);
-        searchPanel.setVisible(false);
-        infoPanel.setVisible(true);
-        JButton backToSearchButton = new JButton();
-        backToSearchButton.setText("Back to Search");
-        backToSearchButton.setVisible(true);
-        backToSearchButton.addActionListener(a -> {
-            infoPanel.setVisible(false);
-            searchPanel.setVisible(true);
-            setSize(300, 125);
-            validate();
-            infoPanel = null;
-        });
-        infoPanel.add(backToSearchButton);
+        exchangeSearch();
         setSize(500, 250);
         validate();
+    }
+
+    public void exchangeInfo() {
+        remove(infoPanel);
+        add(searchPanel);
+        setSize(250, 250);
+        revalidate();
+        repaint();
+    }
+
+    public void exchangeSearch() {
+        remove(searchPanel);
+        add(infoPanel);
+        setSize(500, 250);
+        revalidate();
+        repaint();
     }
 
 }

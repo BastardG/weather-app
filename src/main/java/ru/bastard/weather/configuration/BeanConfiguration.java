@@ -2,7 +2,9 @@ package ru.bastard.weather.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.web.client.RestTemplate;
+import ru.bastard.weather.Main;
 import ru.bastard.weather.gui.SearchCityFrame;
 import ru.bastard.weather.service.http.HttpRequestsService;
 
@@ -28,6 +30,7 @@ public class BeanConfiguration {
     }
 
     @Bean("searchFrame")
+    @Scope("singleton")
     public static SearchCityFrame mainFrame(){
         return new SearchCityFrame();
     }
