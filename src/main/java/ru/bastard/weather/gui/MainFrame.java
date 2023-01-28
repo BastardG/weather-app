@@ -10,7 +10,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 @Component
-public class SearchCityFrame extends JFrame {
+public class MainFrame extends JFrame {
 
     private JTextField cityNameField;
     private JButton submitButton;
@@ -21,7 +21,7 @@ public class SearchCityFrame extends JFrame {
     @Autowired
     private HttpRequestsService httpRequestsService;
 
-    public SearchCityFrame() {
+    public MainFrame() {
         setTitle("Weather");
         configureFrame();
         configureLabel();
@@ -82,7 +82,11 @@ public class SearchCityFrame extends JFrame {
     private void configureButton() {
         submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
-            submit(URLEncoder.encode(cityNameField.getText(), StandardCharsets.UTF_8));
+            try {
+                submit(URLEncoder.encode(cityNameField.getText(), StandardCharsets.UTF_8));
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
             cityNameField.setText("");
         });
         submitButton.setVisible(true);
@@ -91,7 +95,7 @@ public class SearchCityFrame extends JFrame {
         submitButton.setText("Submit");
     }
 
-    private void submit(String cityName){
+    private void submit(String cityName) throws Exception {
         var weatherDto = httpRequestsService.getWeather(cityName);
         infoPanel = new InfoPanel(weatherDto, cityName);
         exchangeSearch();

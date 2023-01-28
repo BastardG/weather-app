@@ -4,8 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.client.RestTemplate;
-import ru.bastard.weather.Main;
-import ru.bastard.weather.gui.SearchCityFrame;
+import ru.bastard.weather.gui.MainFrame;
 import ru.bastard.weather.service.http.HttpRequestsService;
 
 import java.util.Properties;
@@ -29,10 +28,10 @@ public class BeanConfiguration {
         return new Properties();
     }
 
-    @Bean("searchFrame")
+    @Bean("mainFrame")
     @Scope("singleton")
-    public static SearchCityFrame mainFrame(){
-        return new SearchCityFrame();
+    public static MainFrame mainFrame(){
+        return new MainFrame();
     }
 
     @Bean

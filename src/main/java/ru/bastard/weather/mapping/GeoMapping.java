@@ -14,4 +14,5 @@ public class GeoMapping {
         geoDTO.setLon(firstObject.getDouble("lon"));
         return geoDTO;
     }
+
 }

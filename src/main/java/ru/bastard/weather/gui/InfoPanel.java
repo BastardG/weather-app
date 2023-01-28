@@ -1,7 +1,5 @@
 package ru.bastard.weather.gui;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import ru.bastard.weather.Main;
 import ru.bastard.weather.dto.WeatherDTO;
 
@@ -12,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 public class InfoPanel extends JPanel {
 
-    public SearchCityFrame searchCityFrame = Main.searchCityFrame;
+    public MainFrame searchCityFrame = Main.MAIN_FRAME;
 
     JEditorPane editorPane;
     SpringLayout springLayout;
