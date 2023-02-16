@@ -7,7 +7,6 @@ import org.springframework.web.client.RestTemplate;
 import ru.bastard.weather.gui.MainFrame;
 import ru.bastard.weather.service.http.HttpRequestsService;
 
-import java.util.Properties;
 import java.util.logging.Logger;
 
 @Configuration
@@ -21,11 +20,6 @@ public class BeanConfiguration {
     @Bean
     public static RestTemplate restTemplate(){
         return new RestTemplate();
-    }
-
-    @Bean
-    public static Properties properties(){
-        return new Properties();
     }
 
     @Bean("mainFrame")

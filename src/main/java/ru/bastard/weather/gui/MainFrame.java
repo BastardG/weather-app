@@ -1,24 +1,48 @@
 package ru.bastard.weather.gui;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.apache.commons.io.FileUtils;
+import org.json.JSONObject;
+import org.springframework.web.client.RestTemplate;
 import ru.bastard.weather.service.http.HttpRequestsService;
+import ru.bastard.weather.service.io.IOService;
 
 import javax.swing.*;
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 
-@Component
 public class MainFrame extends JFrame {
 
     private SearchPanel searchPanel;
     private InfoPanel infoPanel;
-    @Autowired
     private HttpRequestsService httpRequestsService;
+    private static final IOService ioService = new IOService();
 
     public MainFrame() {
         setTitle("Weather");
-        this.searchPanel = new SearchPanel(this);
+        init();
         configureFrame();
-        this.repaint();
+        repaint();
+    }
+
+    private void init() {
+        searchPanel = new SearchPanel(this);
+        httpRequestsService = new HttpRequestsService(new RestTemplate());
+        add(searchPanel);
+        try {
+            String temp = ioService.getDefault();
+            if(!temp.equals("")){
+                try {
+                    submit(temp);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void configureFrame(){
@@ -26,21 +50,19 @@ public class MainFrame extends JFrame {
         setSize(250, 250);
         setVisible(true);
         setResizable(false);
-        add(searchPanel);
     }
 
     public void submit(String cityName) throws Exception {
         var weatherDto = httpRequestsService.getWeather(cityName);
         infoPanel = new InfoPanel(weatherDto, cityName);
+        searchPanel.dropdownSuggestions.clearSelection();
         exchangeSearch();
-        setSize(500, 250);
         validate();
     }
 
     public void exchangeInfo() {
         remove(infoPanel);
         add(searchPanel);
-        setSize(250, 250);
         revalidate();
         repaint();
     }
@@ -48,7 +70,6 @@ public class MainFrame extends JFrame {
     public void exchangeSearch() {
         remove(searchPanel);
         add(infoPanel);
-        setSize(500, 250);
         revalidate();
         repaint();
     }

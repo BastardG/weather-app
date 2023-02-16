@@ -12,39 +12,42 @@ import java.nio.charset.StandardCharsets;
 
 public class InfoPanel extends JPanel {
 
-    public MainFrame searchCityFrame = Main.MAIN_FRAME;
-
     JTextPane textPane;
     SpringLayout springLayout;
     JButton backToSearchButton;
 
     public InfoPanel(WeatherDTO weatherDTO, String cityName) {
+        init();
         configurePane(weatherDTO, cityName);
         configureButton();
         configureLayout();
     }
 
-    private void configureButton(){
+    private void init() {
+        textPane = new JTextPane();
+        springLayout = new SpringLayout();
         backToSearchButton = new JButton();
+        add(textPane);
+        add(backToSearchButton);
+        setLayout(springLayout);
+    }
+
+    private void configureButton(){
         backToSearchButton.setText("Back to search");
         backToSearchButton.setVisible(true);
         backToSearchButton.addActionListener(a -> {
-            searchCityFrame.exchangeInfo();
+            Main.MAIN_FRAME.exchangeInfo();
         });
-        add(backToSearchButton);
     }
 
     private void configureLayout(){
-        springLayout = new SpringLayout();
         springLayout.putConstraint(SpringLayout.WEST, textPane, 0, SpringLayout.WEST, this);
         springLayout.putConstraint(SpringLayout.EAST, textPane, 0, SpringLayout.EAST, this);
         springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, backToSearchButton, 0, SpringLayout.HORIZONTAL_CENTER, this);
         springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, backToSearchButton, 80, SpringLayout.VERTICAL_CENTER, this);
-        setLayout(springLayout);
     }
 
     private void configurePane(WeatherDTO weatherDTO, String cityName){
-        this.textPane = new JTextPane();
         textPane.setPreferredSize(new Dimension(240, 120));
         textPane.setEditable(false);
         textPane.setText(String.format("Current Weather in %s" +
@@ -60,7 +63,6 @@ public class InfoPanel extends JPanel {
         StyleConstants.setBold(sat, true);
         textPane.setEditable(false);
         doc.setParagraphAttributes(0, doc.getLength(), sat, false);
-        add(textPane);
     }
 
 }
