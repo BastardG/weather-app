@@ -47,7 +47,11 @@ public class SearchPanel extends JPanel {
     private void configureDropdownSuggestions() {
         dropdownSuggestions = new JList<>();
         add(dropdownSuggestions);
-        dropdownSuggestions.setListData(new String[]{"Nizhnevartovsk", "Moscow", "Tula"});
+        try {
+            dropdownSuggestions.setListData(ioService.getLastSearches());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         dropdownSuggestions.setDragEnabled(false);
         dropdownSuggestions.setVisible(false);
         updateUI();
@@ -156,7 +160,7 @@ public class SearchPanel extends JPanel {
             try {
                 var cityName = cityNameField.getText();
                 ioService.putDefault(cityName);
-                FRAME.submit(URLEncoder.encode(cityName, StandardCharsets.UTF_8));
+                FRAME.submit(encode(cityName));
             } catch (Exception exception) {
                 exception.printStackTrace();
             }

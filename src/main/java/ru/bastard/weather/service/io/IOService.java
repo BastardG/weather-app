@@ -6,7 +6,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class IOService {
 
@@ -30,6 +32,42 @@ public class IOService {
         String rawJson = FileUtils.readFileToString(CONFIG_FILE, StandardCharsets.UTF_8);
         JSONObject configRoot = new JSONObject(rawJson);
         return configRoot.getString("default");
+    }
+
+    public void putLastSearch(String lastSearch) throws IOException {
+        if(!isPrepared()) {
+            createPackageAndFiles();
+        }
+        String rawJson = FileUtils.readFileToString(CONFIG_FILE, StandardCharsets.UTF_8);
+        JSONObject configRoot = new JSONObject(rawJson);
+        List<String> suggestions = lastSearchesToList();
+        ArrayDeque<String> queue = new ArrayDeque<>(suggestions);
+        if(queue.size() >= 3) {
+            queue.removeLast();
+        }
+        queue.addFirst(lastSearch);
+        JSONArray jsonArray = new JSONArray(queue);
+        configRoot.put("suggestions", jsonArray);
+        FileUtils.write(CONFIG_FILE, configRoot.toString(), StandardCharsets.UTF_8);
+    }
+
+    public String[] getLastSearches() throws IOException {
+        if (!isPrepared()) {
+            createPackageAndFiles();
+        }
+        return lastSearchesToList().toArray(new String[]{});
+    }
+
+    private List<String> lastSearchesToList() throws IOException {
+        JSONObject configRoot = new JSONObject(FileUtils.readFileToString(CONFIG_FILE, StandardCharsets.UTF_8));
+        JSONArray lastSearches = configRoot.getJSONArray("suggestions");
+        List<String> list = new ArrayList<>();
+        for(Object o : lastSearches) {
+            if(o != null) {
+                list.add(o.toString());
+            }
+        }
+        return list;
     }
 
     private void createPackageAndFiles() throws IOException {

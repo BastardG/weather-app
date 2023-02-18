@@ -56,6 +56,8 @@ public class MainFrame extends JFrame {
         var weatherDto = httpRequestsService.getWeather(cityName);
         infoPanel = new InfoPanel(weatherDto, cityName);
         searchPanel.dropdownSuggestions.clearSelection();
+        ioService.putLastSearch(cityName);
+        searchPanel.dropdownSuggestions.setListData(ioService.getLastSearches());
         exchangeSearch();
         validate();
     }
