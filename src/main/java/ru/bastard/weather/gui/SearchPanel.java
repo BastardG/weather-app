@@ -1,22 +1,17 @@
 package ru.bastard.weather.gui;
 
-import org.apache.commons.io.FileUtils;
-import org.json.JSONObject;
 import ru.bastard.weather.Main;
 import ru.bastard.weather.service.io.IOService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 
 public class SearchPanel extends JPanel {
 

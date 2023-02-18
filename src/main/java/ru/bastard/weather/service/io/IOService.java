@@ -6,9 +6,10 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 
 public class IOService {
 
@@ -40,8 +41,8 @@ public class IOService {
         }
         String rawJson = FileUtils.readFileToString(CONFIG_FILE, StandardCharsets.UTF_8);
         JSONObject configRoot = new JSONObject(rawJson);
-        List<String> suggestions = lastSearchesToList();
-        ArrayDeque<String> queue = new ArrayDeque<>(suggestions);
+        List<String> lastSearchesList = lastSearchesToList();
+        ArrayDeque<String> queue = new ArrayDeque<>(lastSearchesList);
         if(queue.size() >= 3) {
             queue.removeLast();
         }

@@ -1,17 +1,11 @@
 package ru.bastard.weather.gui;
 
-import org.apache.commons.io.FileUtils;
-import org.json.JSONObject;
 import org.springframework.web.client.RestTemplate;
 import ru.bastard.weather.service.http.HttpRequestsService;
 import ru.bastard.weather.service.io.IOService;
 
 import javax.swing.*;
-import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
+import java.io.IOException;
 
 public class MainFrame extends JFrame {
 
