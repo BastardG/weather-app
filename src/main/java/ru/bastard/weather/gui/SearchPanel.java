@@ -5,10 +5,7 @@ import ru.bastard.weather.service.io.IOService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -39,19 +36,6 @@ public class SearchPanel extends JPanel {
         repaint();
     }
 
-    private void configureDropdownSuggestions() {
-        dropdownSuggestions = new JList<>();
-        add(dropdownSuggestions);
-        try {
-            dropdownSuggestions.setListData(ioService.getLastSearches());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        dropdownSuggestions.setDragEnabled(false);
-        dropdownSuggestions.setVisible(false);
-        updateUI();
-    }
-
     private void init() {
         cityNameField = new JTextField();
         submitButton = new JButton();
@@ -63,6 +47,19 @@ public class SearchPanel extends JPanel {
         add(toDefaultButton);
         add(cityNameFieldLabel);
         setLayout(springLayout);
+    }
+
+    private void configureDropdownSuggestions() {
+        dropdownSuggestions = new JList<>();
+        add(dropdownSuggestions);
+        try {
+            dropdownSuggestions.setListData(ioService.getLastSearches());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        dropdownSuggestions.setDragEnabled(false);
+        dropdownSuggestions.setVisible(false);
+        updateUI();
     }
 
     private void configureThis() {
@@ -77,6 +74,26 @@ public class SearchPanel extends JPanel {
         cityNameField.setName("searchField");
         cityNameField.setBounds(150, 125, 75, 35);
         cityNameField.setPreferredSize(new Dimension(100, 25));
+        configureFieldFocusListener();
+        configureFieldKeyListener();
+        configureFieldMouseListener();
+    }
+
+    private void configureFieldMouseListener() {
+        cityNameField.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(dropdownSuggestions.isVisible()) {
+                    dropdownSuggestions.setVisible(false);
+                } else {
+                    dropdownSuggestions.setVisible(true);
+                }
+                updateUI();
+            }
+        });
+    }
+
+    private void configureFieldFocusListener() {
         cityNameField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -89,6 +106,9 @@ public class SearchPanel extends JPanel {
                 updateUI();
             }
         });
+    }
+
+    private void configureFieldKeyListener() {
         cityNameField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
