@@ -121,7 +121,7 @@ public class SearchPanel extends JPanel {
                         }
                     } else {
                         try {
-                            Main.MAIN_FRAME.submit(encode(dropdownSuggestions.getSelectedValue()));
+                            cityNameField.setText(dropdownSuggestions.getSelectedValue());
                         } catch (Exception exception) {
                             exception.printStackTrace();
                         }

@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class IOService {
         if(queue.size() >= 3) {
             queue.removeLast();
         }
-        queue.addFirst(lastSearch);
+        queue.addFirst(URLDecoder.decode(lastSearch, StandardCharsets.UTF_8));
         JSONArray jsonArray = new JSONArray(queue);
         configRoot.put("suggestions", jsonArray);
         FileUtils.write(CONFIG_FILE, configRoot.toString(), StandardCharsets.UTF_8);
