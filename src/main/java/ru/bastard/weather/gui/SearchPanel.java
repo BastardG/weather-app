@@ -1,5 +1,6 @@
 package ru.bastard.weather.gui;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.bastard.weather.Main;
 import ru.bastard.weather.service.io.IOService;
 
@@ -7,8 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ResourceBundle;
 
 public class SearchPanel extends JPanel {
 
@@ -187,11 +190,11 @@ public class SearchPanel extends JPanel {
         toDefaultButton.setSize(50, 50);
         submitButton.setMaximumSize(new Dimension(100, 50));
         toDefaultButton.setMaximumSize(new Dimension(50, 50));
-        submitButton.setText("Submit");
+        submitButton.setText(MainFrame.language.getString("submitButton"));
     }
 
     private void configureLabel() {
-        cityNameFieldLabel.setText("Input city name");
+        cityNameFieldLabel.setText(MainFrame.language.getString("inputLabel"));
         cityNameFieldLabel.setVisible(true);
         cityNameFieldLabel.setLabelFor(cityNameField);
     }

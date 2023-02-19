@@ -1,11 +1,16 @@
 package ru.bastard.weather.gui;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
+import ru.bastard.weather.Main;
 import ru.bastard.weather.service.http.HttpRequestsService;
 import ru.bastard.weather.service.io.IOService;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.ResourceBundle;
 
 public class MainFrame extends JFrame {
 
@@ -13,9 +18,12 @@ public class MainFrame extends JFrame {
     private InfoPanel infoPanel;
     private HttpRequestsService httpRequestsService;
     private static final IOService ioService = new IOService();
+    public static ResourceBundle language;
 
-    public MainFrame() {
-        setTitle("Weather");
+    @Autowired
+    public MainFrame(ResourceBundle resourceBundle) {
+        language = resourceBundle;
+        setTitle(MainFrame.language.getString("title"));
         init();
         configureFrame();
         repaint();
