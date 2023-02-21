@@ -1,7 +1,9 @@
 package ru.bastard.weather.gui;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ImportResource;
 import ru.bastard.weather.Main;
+import ru.bastard.weather.configuration.BeanConfiguration;
 import ru.bastard.weather.service.io.IOService;
 
 import javax.swing.*;
@@ -22,6 +24,8 @@ public class SearchPanel extends JPanel {
     private SpringLayout springLayout;
     public JList<String> dropdownSuggestions;
     private final MainFrame FRAME;
+    private JButton russianLanguageButton;
+    private JButton englishLanguageButton;
 
     private static final IOService ioService = new IOService();
 
@@ -31,6 +35,7 @@ public class SearchPanel extends JPanel {
         configureDropdownSuggestions();
         configureTextField();
         configureButtons();
+        configureLanguageButtons();
         configureLabel();
         configureThis();
         configureLayout();
@@ -116,7 +121,7 @@ public class SearchPanel extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode() == 10) {
-                    if(dropdownSuggestions.isSelectionEmpty()) {
+                    if(dropdownSuggestions.isSelectionEmpty() || !dropdownSuggestions.isVisible()) {
                         try {
                             Main.MAIN_FRAME.submit(encode(cityNameField.getText()));
                         } catch (Exception exception) {
@@ -125,6 +130,8 @@ public class SearchPanel extends JPanel {
                     } else {
                         try {
                             cityNameField.setText(dropdownSuggestions.getSelectedValue());
+                            dropdownSuggestions.setVisible(false);
+                            cityNameField.requestFocus();
                         } catch (Exception exception) {
                             exception.printStackTrace();
                         }
@@ -161,6 +168,41 @@ public class SearchPanel extends JPanel {
         return URLEncoder.encode(incomingString, StandardCharsets.UTF_8);
     }
 
+    private void configureLanguageButtons() {
+        ImageIcon iconRu = new ImageIcon(ClassLoader.getSystemResource("images/ru_icon.png"));
+        ImageIcon iconDef = new ImageIcon(ClassLoader.getSystemResource("images/def_icon.png"));
+        iconRu.setImage(iconRu.getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH));
+        iconDef.setImage(iconDef.getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH));
+        russianLanguageButton = new JButton(iconRu);
+        russianLanguageButton.setMaximumSize(new Dimension(50, 50));
+        russianLanguageButton.setVisible(true);
+        //russianLanguageButton.setText("R");
+        englishLanguageButton = new JButton(iconDef);
+        englishLanguageButton.setMaximumSize(new Dimension(50, 50));
+        englishLanguageButton.setVisible(true);
+        //englishLanguageButton.setText("E");
+        russianLanguageButton.addActionListener(a -> {
+            try {
+                ioService.setLang("ru");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        englishLanguageButton.addActionListener(a -> {
+            try {
+                ioService.setLang("");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        add(russianLanguageButton);
+        add(englishLanguageButton);
+    }
+
+    private void changeLanguage(String langCode) {
+
+    }
+
     private void configureButtons() {
         submitButton.addActionListener(e -> {
             try {
@@ -190,11 +232,11 @@ public class SearchPanel extends JPanel {
         toDefaultButton.setSize(50, 50);
         submitButton.setMaximumSize(new Dimension(100, 50));
         toDefaultButton.setMaximumSize(new Dimension(50, 50));
-        submitButton.setText(MainFrame.language.getString("submitButton"));
+        submitButton.setText(MainFrame.getInstance().language.getString("submitButton"));
     }
 
     private void configureLabel() {
-        cityNameFieldLabel.setText(MainFrame.language.getString("inputLabel"));
+        cityNameFieldLabel.setText(MainFrame.getInstance().language.getString("inputLabel"));
         cityNameFieldLabel.setVisible(true);
         cityNameFieldLabel.setLabelFor(cityNameField);
     }
@@ -213,6 +255,10 @@ public class SearchPanel extends JPanel {
         springLayout.putConstraint(SpringLayout.NORTH, dropdownSuggestions, 0, SpringLayout.SOUTH, cityNameField);
         springLayout.putConstraint(SpringLayout.WEST, dropdownSuggestions, 0, SpringLayout.WEST, cityNameField);
         springLayout.putConstraint(SpringLayout.EAST, dropdownSuggestions, 0, SpringLayout.EAST, cityNameField);
+        springLayout.putConstraint(SpringLayout.WEST, russianLanguageButton, 0, SpringLayout.WEST, this);
+        springLayout.putConstraint(SpringLayout.SOUTH, russianLanguageButton, 0, SpringLayout.SOUTH, this);
+        springLayout.putConstraint(SpringLayout.WEST, englishLanguageButton, 0, SpringLayout.EAST, russianLanguageButton);
+        springLayout.putConstraint(SpringLayout.SOUTH, englishLanguageButton, 0, SpringLayout.SOUTH, this);
         revalidate();
         repaint();
     }

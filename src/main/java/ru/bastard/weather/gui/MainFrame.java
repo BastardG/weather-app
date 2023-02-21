@@ -1,15 +1,13 @@
 package ru.bastard.weather.gui;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.client.RestTemplate;
-import ru.bastard.weather.Main;
 import ru.bastard.weather.service.http.HttpRequestsService;
 import ru.bastard.weather.service.io.IOService;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
 
 public class MainFrame extends JFrame {
@@ -18,18 +16,24 @@ public class MainFrame extends JFrame {
     private InfoPanel infoPanel;
     private HttpRequestsService httpRequestsService;
     private static final IOService ioService = new IOService();
-    public static ResourceBundle language;
+    private static MainFrame instance;
+    public ResourceBundle language;
+
+    public MainFrame() {
+        instance = this;
+    }
 
     @Autowired
-    public MainFrame(ResourceBundle resourceBundle) {
+    public void setLanguage(@Qualifier("lang") ResourceBundle resourceBundle) {
         language = resourceBundle;
-        setTitle(MainFrame.language.getString("title"));
+    }
+
+    public void initialized() {
         init();
-        configureFrame();
-        repaint();
     }
 
     private void init() {
+        setTitle(this.language.getString("title"));
         searchPanel = new SearchPanel(this);
         httpRequestsService = new HttpRequestsService(new RestTemplate());
         add(searchPanel);
@@ -45,6 +49,9 @@ public class MainFrame extends JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        configureFrame();
+        revalidate();
+        repaint();
     }
 
     private void configureFrame(){
@@ -76,6 +83,10 @@ public class MainFrame extends JFrame {
         add(infoPanel);
         revalidate();
         repaint();
+    }
+
+    public static MainFrame getInstance() {
+        return instance;
     }
 
 }

@@ -72,11 +72,32 @@ public class IOService {
         return list;
     }
 
+    public String getLang() {
+        try {
+            String jsonFromFile = FileUtils.readFileToString(CONFIG_FILE, StandardCharsets.UTF_8);
+            JSONObject configRoot = new JSONObject(jsonFromFile);
+            String langCode = configRoot.getString("lang");
+            return langCode;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+    public void setLang(String langCode) throws IOException {
+        String jsonFromFile = FileUtils.readFileToString(CONFIG_FILE, StandardCharsets.UTF_8);
+        JSONObject configRoot = new JSONObject(jsonFromFile);
+        configRoot.put("lang", langCode);
+        FileUtils.write(CONFIG_FILE, configRoot.toString(), StandardCharsets.UTF_8);
+    }
+
     private void createPackageAndFiles() throws IOException {
         FileUtils.createParentDirectories(CONFIG_FILE);
         JSONObject configRoot = new JSONObject();
         configRoot.put("default", "");
         configRoot.put("suggestions", new JSONArray());
+        configRoot.put("lang", "ru");
         CONFIG_FILE.createNewFile();
         FileUtils.write(CONFIG_FILE, configRoot.toString(), StandardCharsets.UTF_8);
     }

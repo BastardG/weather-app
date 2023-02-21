@@ -1,5 +1,7 @@
 package ru.bastard.weather.dto.enums;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,6 +57,8 @@ public enum WeatherCode {
     public String getName() {
         return name;
     }
+
+    public byte[] getRuName() throws UnsupportedEncodingException {return ruName.getBytes("CP1251");}
 
     public List<Integer> getWeatherCodes() {
         return new ArrayList<>(weatherCodes);

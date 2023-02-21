@@ -5,9 +5,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.client.RestTemplate;
-import ru.bastard.weather.Main;
 import ru.bastard.weather.gui.MainFrame;
 import ru.bastard.weather.service.http.HttpRequestsService;
+import ru.bastard.weather.service.io.IOService;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -15,6 +15,11 @@ import java.util.logging.Logger;
 
 @Configuration
 public class BeanConfiguration {
+
+    @Bean
+    public static IOService ioService() {
+        return new IOService();
+    }
 
     @Bean
     public static Logger logger(){
@@ -26,10 +31,11 @@ public class BeanConfiguration {
         return new RestTemplate();
     }
 
-    @Bean("mainFrame")
+    @Bean(value = "mainFrame", initMethod = "initialized")
     @Scope("singleton")
     public static MainFrame mainFrame(){
-        return new MainFrame(language());
+        MainFrame mainFrame = new MainFrame();
+        return mainFrame;
     }
 
     @Bean
@@ -39,15 +45,21 @@ public class BeanConfiguration {
 
     @Bean
     @Qualifier("lang")
-    public static ResourceBundle language() {
-        switch (Main.LANG) {
-            case 1 -> {
+    public static ResourceBundle language(@Qualifier("lang_code") String langCode) {
+        switch (langCode) {
+            case "ru" -> {
                 return ResourceBundle.getBundle("lang", new Locale("ru", "RU"));
             }
             default -> {
                 return ResourceBundle.getBundle("lang");
             }
         }
+    }
+
+    @Bean
+    @Qualifier("lang_code")
+    public static String langCode() {
+        return ioService().getLang();
     }
 
 }
