@@ -4,3 +4,5 @@
 *.properties
 /target
 *.jar
+^lang.properties
+^lang_ru.properties
